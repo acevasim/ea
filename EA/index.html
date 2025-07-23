@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vasim Ahmed Modak - Enterprise Architect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Professional Slate (Slate-900/50, Sky-600/200) -->
+    <!-- Application Structure Plan: The SPA is structured as a single, scrollable page divided into logical sections: Header, Summary, Key Achievements (with interactive charts), Experience, Education, Certifications, and Technology Exposures. This linear flow provides a traditional resume experience, while the interactive elements within 'Key Achievements' and the theme toggle enhance engagement. The structure prioritizes clear content hierarchy and readability. -->
+    <!-- Visualization & Content Choices: 
+        - Application Modernization: Goal -> Compare. Viz -> Bar Chart (Chart.js) showing TCO reduction and performance improvement percentages. Interaction -> Static. Justification -> Visually quantifies impact.
+        - Multi-Cloud/FinOps: Goal -> Inform/Proportion. Viz -> Doughnut Chart (Chart.js) for migration percentage and large text for cost savings. Interaction -> Static. Justification -> Highlights key financial and adoption metrics.
+        - Kubernetes & Containerization: Goal -> Compare. Viz -> Bar Chart (Chart.js) showing deployment frequency multiplier and provisioning time reduction percentage. Interaction -> Static. Justification -> Clearly illustrates operational efficiency gains.
+        - Zero-Trust, AI/ML, Datacenter, Licensing: Goal -> Inform. Viz -> Large, bold text stats with descriptive labels. Interaction -> Static. Justification -> Simple, direct, and impactful presentation of single key metrics.
+        - Theme Toggle: Goal -> User preference. Viz -> Icon switch. Interaction -> Click to change CSS classes and save preference. Justification -> Enhances user comfort and modern aesthetic.
+        - All charts are Canvas-based (Chart.js). No SVG graphics or Mermaid JS are used.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .light-theme {
+            background-color: #f8fafc; /* slate-50 */
+            color: #1e293b; /* slate-800 */
+        }
+        .light-theme .card {
+            background-color: #ffffff;
+            border-color: #e2e8f0; /* slate-200 */
+        }
+        .light-theme .text-primary { color: #0f766e; /* teal-700 */ }
+        .light-theme .text-secondary { color: #475569; /* slate-600 */ }
+        .light-theme .bg-accent { background-color: #f0fdfa; /* teal-50 */ }
+        .light-theme .border-accent { border-color: #14b8a6; /* teal-500 */ }
+        .light-theme .chart-title { color: #1e293b; } /* slate-800 */
+        .light-theme .chart-label { color: #475569; } /* slate-600 */
+
+        .dark-theme {
+            background-color: #1a202c; /* slate-900 */
+            color: #e2e8f0; /* slate-200 */
+        }
+        .dark-theme .card {
+            background-color: #1e293b; /* slate-800, slightly lighter than body for subtle elevation */
+            border-color: #334155; /* slate-700, subtle border */
+        }
+        .dark-theme .text-primary { color: #2dd4bf; /* teal-400 */ }
+        .dark-theme .text-secondary { color: #a0aec0; /* gray-400 */ }
+        .dark-theme .bg-accent { background-color: #334155; /* slate-700, for subtle icon background */ }
+        .dark-theme .border-accent { border-color: #475569; /* slate-600, subtle border */ }
+        .dark-theme .chart-title { color: #e2e8f0; } /* slate-200 */
+        .dark-theme .chart-label { color: #a0aec0; } /* gray-400 */
+
+        .theme-toggle {
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+        }
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px; /* Max width for charts */
+            margin-left: auto;
+            margin-right: auto;
+            height: 250px; /* Fixed height for charts */
+            max-height: 250px; /* Max height to prevent overflow */
+            padding: 1rem;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 300px;
+                max-height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Header Section -->
+        <header class="flex flex-col sm:flex-row justify-between items-center mb-12 pb-6 border-b border-slate-200 dark:border-gray-700">
+            <div class="text-center sm:text-left mb-4 sm:mb-0">
+                <h1 class="text-4xl sm:text-5xl font-bold text-primary">Vasim Ahmed Modak</h1>
+                <p class="text-xl text-secondary mt-1">Leader in Digital Transformations with Security and Efficient ROI</p>
+                <div class="flex flex-col sm:flex-row items-center sm:items-start mt-3 text-secondary text-sm">
+                    <span class="mr-0 sm:mr-4">📍 Delta, BC</span>
+                    <span class="mr-0 sm:mr-4">📞 (672)-272-7867</span>
+                    <span>📧 ace_vasim@hotmail.com</span>
+                </div>
+            </div>
+            <div class="theme-toggle p-2 rounded-full bg-slate-200 dark:bg-gray-700 text-slate-800 dark:text-slate-200" id="theme-toggle">
+                <span class="text-2xl">☀️</span>
+            </div>
+        </header>
+
+        <!-- Summary Section -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-primary mb-6">Summary</h2>
+            <div class="card p-6 rounded-lg shadow-sm border">
+                <p class="text-secondary leading-relaxed">
+                    Accomplished and results-driven Enterprise Architect with over 27 years of progressive experience in architecting and implementing digital transformation solutions. Proven expertise in leading large-scale <span class="font-semibold">cloud adoption</span>, <span class="font-semibold">application modernization</span>, and establishing robust governance across <span class="font-semibold">multi-cloud environments</span> (Azure, AWS, GCP). Adept at integrating <span class="font-semibold">security by design</span>, implementing <span class="font-semibold">Zero-Trust architectures</span>, and optimizing <span class="font-semibold">cloud spend</span> through advanced <span class="font-semibold">FinOps</span> practices. Skilled in strategic leadership, financial management, and fostering cyber resilience, with a track record of delivering multi-million-dollar cost savings and significant operational efficiencies. Eligible for Government of Canada Secret Level security clearance.
+                </p>
+            </div>
+        </section>
+
+        <!-- Key Achievements Section -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-primary mb-6">Key Achievements</h2>
+            <p class="text-secondary mb-8">
+                This section highlights significant accomplishments with quantifiable results, demonstrating leadership and impact across various technology domains.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Achievement 1: Application Modernization & Consolidation -->
+                <div class="card p-6 rounded-lg shadow-sm border flex flex-col items-center text-center">
+                    <div class="p-3 rounded-full bg-accent text-primary mb-4">
+                        <span class="text-3xl">🔄</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-primary mb-2">Application Modernization & Consolidation</h3>
+                    <p class="text-secondary mb-4">Spearheaded modernization of 50+ critical legacy applications.</p>
+                    <div class="chart-container">
+                        <canvas id="appModernizationChart"></canvas>
+                    </div>
+                    <p class="text-secondary mt-4">Resulted in a <strong class="text-primary">30% reduction in TCO</strong> and a <strong class="text-primary">25% improvement in application performance</strong>.</p>
+                </div>
+
+                <!-- Achievement 2: Multi-Cloud Adoption & FinOps -->
+                <div class="card p-6 rounded-lg shadow-sm border flex flex-col items-center text-center">
+                    <div class="p-3 rounded-full bg-accent text-primary mb-4">
+                        <span class="text-3xl">☁️</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-primary mb-2">Multi-Cloud Adoption & FinOps</h3>
+                    <p class="text-secondary mb-4">Architected migration of 70% on-premises workloads to multi-cloud.</p>
+                    <div class="flex flex-col items-center justify-center h-full">
+                        <div class="chart-container !h-40 !w-40 !max-w-[10rem] !max-h-[10rem] mb-2">
+                            <canvas id="finopsChart"></canvas>
+                        </div>
+                        <p class="text-5xl font-bold text-primary">$2.5M+</p>
+                        <p class="text-secondary">Annual Cloud Cost Optimization</p>
+                    </div>
+                </div>
+
+                <!-- Achievement 3: Zero-Trust Architecture & Security by Design -->
+                <div class="card p-6 rounded-lg shadow-sm border flex flex-col items-center text-center">
+                    <div class="p-3 rounded-full bg-accent text-primary mb-4">
+                        <span class="text-3xl">🛡️</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-primary mb-2">Zero-Trust Architecture & Security by Design</h3>
+                    <p class="text-secondary mb-4">Led Zero Trust Architecture rollout, enhancing enterprise security posture.</p>
+                    <div class="flex flex-col items-center justify-center h-full">
+                        <p class="text-5xl font-bold text-primary">40%</p>
+                        <p class="text-secondary mt-2">Reduction in Enterprise Attack Surface</p>
+                        <p class="text-secondary text-sm mt-4">Through micro-segmentation, identity-centric access control, and continuous validation.</p>
+                    </div>
+                </div>
+
+                <!-- Achievement 4: AI/ML Integration & MLOps -->
+                <div class="card p-6 rounded-lg shadow-sm border flex flex-col items-center text-center">
+                    <div class="p-3 rounded-full bg-accent text-primary mb-4">
+                        <span class="text-3xl">🤖</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-primary mb-2">AI/ML Integration & MLOps</h3>
+                    <p class="text-secondary mb-4">Pioneered AI adoption in SecOps and developed strategic roadmap for Agentic AI.</p>
+                    <div class="flex flex-col items-center justify-center h-full">
+                        <p class="text-5xl font-bold text-primary">$1.8M+</p>
+                        <p class="text-secondary mt-2">Potential Annual Savings Identified</p>
+                        <p class="text-secondary text-sm mt-4">Through secure, AI-driven automation in threat detection and security operations.</p>
+                    </div>
+                </div>
+
+                <!-- Achievement 5: Datacenter Migrations & Virtualization -->
+                <div class="card p-6 rounded-lg shadow-sm border flex flex-col items-center text-center">
+                    <div class="p-3 rounded-full bg-accent text-primary mb-4">
+                        <span class="text-3xl">🏢</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-primary mb-2">Datacenter Migrations & Virtualization</h3>
+                    <p class="text-secondary mb-4">Executed complex migration of two data centers to hybrid cloud with zero disruption.</p>
+                    <div class="flex flex-col items-center justify-center h-full">
+                        <p class="text-4xl font-bold text-primary">1,000+ Servers</p>
+                        <p class="text-4xl font-bold text-primary">5,000+ Users</p>
+                        <p class="text-secondary mt-2">Impacted with <strong class="text-primary">zero critical business disruption</strong>.</p>
+                        <p class="text-secondary mt-2"><strong class="text-primary">20% improvement</strong> in virtualization infrastructure utilization.</p>
+                    </div>
+                </div>
+
+                <!-- Achievement 6: Kubernetes & Containerization -->
+                <div class="card p-6 rounded-lg shadow-sm border flex flex-col items-center text-center">
+                    <div class="p-3 rounded-full bg-accent text-primary mb-4">
+                        <span class="text-3xl">⚙️</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-primary mb-2">Kubernetes & Containerization</h3>
+                    <p class="text-secondary mb-4">Championed Kubernetes adoption, boosting deployment frequency and efficiency.</p>
+                    <div class="chart-container">
+                        <canvas id="kubernetesChart"></canvas>
+                    </div>
+                    <p class="text-secondary mt-4">Achieved a <strong class="text-primary">2x improvement in deployment frequency</strong> and a <strong class="text-primary">15% reduction in infrastructure provisioning time</strong>.</p>
+                </div>
+
+                <!-- Achievement 7: Licensing Optimization -->
+                <div class="card p-6 rounded-lg shadow-sm border flex flex-col items-center text-center col-span-1 md:col-span-2 lg:col-span-1">
+                    <div class="p-3 rounded-full bg-accent text-primary mb-4">
+                        <span class="text-3xl">💰</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-primary mb-2">Licensing Optimization</h3>
+                    <p class="text-secondary mb-4">Led comprehensive SQL and Microsoft licensing consolidations.</p>
+                    <div class="flex flex-col items-center justify-center h-full">
+                        <p class="text-5xl font-bold text-primary">$1M+</p>
+                        <p class="text-secondary mt-2">Annual Savings Achieved</p>
+                        <p class="text-secondary text-sm mt-4">By optimizing agreements and retiring unused licenses.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-primary mb-6">Experience</h2>
+            <p class="text-secondary mb-8">
+                This section details my professional journey, highlighting key roles and contributions in enterprise architecture, cloud strategy, and security.
+            </p>
+
+            <div class="space-y-8">
+                <!-- Bell Canada -->
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary">Enterprise Architect (Cloud Strategy, Financial & AI Governance & Security Compliance)</h3>
+                    <p class="text-secondary">Bell Canada (via Mariner Innovations) | Sep 2021 – Present</p>
+                    <ul class="list-disc list-inside text-secondary mt-4 space-y-2">
+                        <li>Spearheaded <span class="font-semibold">cloud strategy and transformation initiatives</span>, ensuring scalability, <span class="font-semibold">security</span>, and <span class="font-semibold">financial governance</span> across <span class="font-semibold">AWS and GCP environments</span>.</li>
+                        <li>Architected and implemented comprehensive <span class="font-semibold">multi-cloud governance frameworks</span>, with a specific focus on <span class="font-semibold">Azure, AWS, and GCP</span>.</li>
+                        <li>Established and enforced <span class="font-semibold">security and compliance frameworks</span>, aligning with Cloud Controls Matrix (CCM), SOC 2, ISO 27001, and PCI DSS.</li>
+                        <li>Defined and enforced guardrails for <span class="font-semibold">cloud operations</span> using tools such as AWS Control Tower, Azure Policy, and GCP Organization Policy Service.</li>
+                        <li>Instrumental in <span class="font-semibold">Cloud Compliance Automation</span>, leveraging tools like AWS Config, Azure Security Center, Cloud Posture Management, and GRC and SIEM platforms.</li>
+                        <li>Directed <span class="font-semibold">financial governance frameworks</span>, enabling <span class="font-semibold">multi-million-dollar cost optimization</span>, budget forecasting, and spend transparency.</li>
+                        <li>Championed <span class="font-semibold">cloud security posture management</span>, driving Prisma Cloud adoption and remediation strategies.</li>
+                        <li>Pioneered <span class="font-semibold">AI adoption in SecOps</span>, implementing an <span class="font-semibold">ML Ops framework</span> to securely integrate <span class="font-semibold">AI-driven automation</span>.</li>
+                        <li>Achieved multi-million-dollar savings by architecting the migration of a Cloudera-based on-prem Security Data Lake to a <span class="font-semibold">cloud-native PaaS solution</span>.</li>
+                    </ul>
+                </div>
+
+                <!-- Mariner Innovations -->
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary">Enterprise Architect and Alliance Team Member (Cloud Practice and Alliance Team)</h3>
+                    <p class="text-secondary">Mariner Innovations | Sep 2021 – Dec 2023</p>
+                    <ul class="list-disc list-inside text-secondary mt-4 space-y-2">
+                        <li>Played a pivotal role in driving <span class="font-semibold">cloud strategy</span>, strategic partnerships, and <span class="font-semibold">security compliance initiatives</span>.</li>
+                        <li>Spearheaded the development of <span class="font-semibold">cloud governance structures</span>.</li>
+                        <li><span class="font-semibold">Operationalized Zero Trust principles within Azure</span> by implementing network micro-segmentation, role-based access, conditional access policies, and secure baseline configurations.</li>
+                        <li>Led the development and launch of enterprise <span class="font-semibold">security offerings</span>.</li>
+                        <li>Established foundational <span class="font-semibold">security frameworks</span> for ISO compliance.</li>
+                    </ul>
+                </div>
+
+                <!-- Abu Dhabi Islamic Bank -->
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary">Cloud Migration Manager and Head of Fin-Ops - Leader (Cloud Adoption and Migration)</h3>
+                    <p class="text-secondary">Abu Dhabi Islamic Bank | June 2021 – May 2022</p>
+                    <ul class="list-disc list-inside text-secondary mt-4 space-y-2">
+                        <li>Provided strategic support for <span class="font-semibold">Azure migrations</span>, leading responsibility mapping, governance checkpoints, and aligning migration workflows.</li>
+                        <li>Led <span class="font-semibold">Azure governance implementation</span> in partnership with KPMG.</li>
+                        <li>Acted as a trusted governance advisor to technical and executive stakeholders, translating complex <span class="font-semibold">security, compliance</span>, and operational concerns into actionable <span class="font-semibold">cloud policies and architecture standards</span>.</li>
+                        <li>Collaborated with finance teams to define and implement effective controls, streamlining processes to ensure budgetary discipline in <span class="font-semibold">cloud consumption</span>.</li>
+                        <li>Identified and executed <span class="font-semibold">cost containment and avoidance strategies</span>.</li>
+                        <li>Ensured <span class="font-semibold">API Gateway's (MuleSoft) horizontal scaling</span> and load balancer failover switching was tested, and appropriate rate limiting and throttling were in place.</li>
+                        <li>Ensured <span class="font-semibold">API Gateway's (MuleSoft) audit trails</span> were fully traceable for data access and API calls.</li>
+                    </ul>
+                </div>
+
+                <!-- Injazat Data Systems -->
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary">Technology Solution Architect</h3>
+                    <p class="text-secondary">Injazat Data Systems | June 2010 – June 2021</p>
+                    <ul class="list-disc list-inside text-secondary mt-4 space-y-2">
+                        <li>Governed <span class="font-semibold">cloud-native solutions</span> for complex, enterprise-scale applications.</li>
+                        <li>Developed enterprise architecture governance policies based on the <span class="font-semibold">TOGAF framework</span>.</li>
+                        <li>Led large-scale <span class="font-semibold">data center migrations</span>, implementing the <span class="font-semibold">7 R's of Cloud Migration framework (Rehost, Replatform, Refactor, Repurchase, Retire, Retain, Relocate)</span> for <span class="font-semibold">Application Modernization</span> across critical FMO systems.</li>
+                        <li>Optimized infrastructure spending on OS, <span class="font-semibold">applications</span>, and databases, delivering millions in cost savings.</li>
+                        <li>Designed <span class="font-semibold">multi-cloud and hybrid cloud environments</span>, orchestrating and automating deployments and migrations.</li>
+                        <li>Implemented <span class="font-semibold">private cloud solutions</span> for government entities, ensuring <span class="font-semibold">secure and scalable architectures</span>.</li>
+                    </ul>
+                </div>
+
+                <!-- Other Experience (briefed) -->
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary">Operations Delivery Lead</h3>
+                    <p class="text-secondary">Hewlett Packard, Bengaluru, BLR | February 2008 – May 2010</p>
+                    <ul class="list-disc list-inside text-secondary mt-4 space-y-2">
+                        <li>Led Operations teams and SIP implementation efforts across functional teams.</li>
+                    </ul>
+                </div>
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary">Microsoft Exchange Support Consultant (Pro Customers)</h3>
+                    <p class="text-secondary">Wipro BPO, Belapur New Mumbai, BOM | July 2004 – January 2008</p>
+                    <ul class="list-disc list-inside text-secondary mt-4 space-y-2">
+                        <li>Team lead managing 8 Microsoft Exchange Support Engineers on their technical delivery efficiency.</li>
+                    </ul>
+                </div>
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary">System Support Engineer</h3>
+                    <p class="text-secondary">Jackys Electronics, Dubai, NY | February 2002 – May 2004</p>
+                    <ul class="list-disc list-inside text-secondary mt-4 space-y-2">
+                        <li>Supported on-field enterprise application availability and uptime.</li>
+                    </ul>
+                </div>
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary">Lead Developer and System Admin</h3>
+                    <p class="text-secondary">Ace Virtual Technologies Pvt Ltd, Mumbai India | July 2000 – February 2002</p>
+                    <ul class="list-disc list-inside text-secondary mt-4 space-y-2">
+                        <li>Developed applications for Windows CE and managed systems and network.</li>
+                    </ul>
+                </div>
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary">Center Network Administrator</h3>
+                    <p class="text-secondary">NIIT Computer Education, Thane and Mulund CA | April 1998 – July 2000</p>
+                    <ul class="list-disc list-inside text-secondary mt-4 space-y-2">
+                        <li>Assisted students in code compilation and projects; managed network.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education Section -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-primary mb-6">Education</h2>
+            <p class="text-secondary mb-8">
+                My academic background has provided a strong foundation for my career in IT and enterprise architecture.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary">Master of Business Administration (MBA), Sales and Operations</h3>
+                    <p class="text-secondary">MAHE, Dubai, DXB | September 2019</p>
+                </div>
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary">Bachelor of Computer Applications (BCA)</h3>
+                    <p class="text-secondary">AIEM, Mumbai, India | April 2003</p>
+                </div>
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary">Junior College Commerce BCOM</h3>
+                    <p class="text-secondary">State Board Mumbai | April 2000</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Certifications & Awards Section -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-primary mb-6">Certifications & Awards</h2>
+            <p class="text-secondary mb-8">
+                Continuous learning and professional development are key to staying current in the rapidly evolving technology landscape.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary">Google Certified Professional (GCP)</h3>
+                    <p class="text-secondary">December 2020</p>
+                </div>
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary">Certified Information Security Manager (CISM)</h3>
+                    <p class="text-secondary">September 2020</p>
+                </div>
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary">Project Management Professional (PMP)</h3>
+                    <p class="text-secondary">July 2020</p>
+                </div>
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary">Togaf 9.2</h3>
+                    <p class="text-secondary">July 2019</p>
+                </div>
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary">Azure Certified Solution Architect</h3>
+                    <p class="text-secondary">August 2017</p>
+                </div>
+            </div>
+            <div class="mt-8">
+                <h3 class="text-2xl font-semibold text-primary mb-4">Certifications In Progress:</h3>
+                <ul class="list-disc list-inside text-secondary space-y-2">
+                    <li>FinOps Certified Practitioner</li>
+                    <li>FinOps Certified Professional</li>
+                    <li>(ISC) Certified Information Systems Security Professional - CISSP®</li>
+                    <li>Offensive Security - Offensive Security Certified Professional (OSCP)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Technology Exposures Section -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-primary mb-6">Technology Exposures</h2>
+            <p class="text-secondary mb-8">
+                A broad range of technical skills and familiarity with leading platforms and tools.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary mb-3">Cloud Platforms</h3>
+                    <ul class="list-disc list-inside text-secondary space-y-1">
+                        <li>Azure</li>
+                        <li>AWS</li>
+                        <li>GCP</li>
+                        <li>M365</li>
+                        <li>SaaS</li>
+                    </ul>
+                </div>
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary mb-3">Security & Governance Tools</h3>
+                    <ul class="list-disc list-inside text-secondary space-y-1">
+                        <li>Prisma Cloud</li>
+                        <li>AWS Control Tower</li>
+                        <li>Azure Policy</li>
+                        <li>GCP Organization Policy Service</li>
+                        <li>Azure Security Center</li>
+                        <li>GRC platforms</li>
+                        <li>SIEM</li>
+                        <li>CMDB</li>
+                        <li>Apptio Cloudability</li>
+                    </ul>
+                </div>
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary mb-3">Frameworks & Standards</h3>
+                    <ul class="list-disc list-inside text-secondary space-y-1">
+                        <li>NIST</li>
+                        <li>PCI</li>
+                        <li>SOC2</li>
+                        <li>ISO 27001</li>
+                        <li>CIS Benchmarks</li>
+                        <li>TOGAF</li>
+                        <li>Zero Trust Architecture</li>
+                        <li>Cloud Controls Matrix (CCM)</li>
+                        <li>Microsoft FinOps best practices</li>
+                        <li>7 R's of Cloud Migration</li>
+                    </ul>
+                </div>
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary mb-3">Identity and Access</h3>
+                    <ul class="list-disc list-inside text-secondary space-y-1">
+                        <li>Azure AD</li>
+                        <li>Okta</li>
+                        <li>Active Directory</li>
+                        <li>Sailpoint Access Integrations</li>
+                    </ul>
+                </div>
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary mb-3">Technologies</h3>
+                    <ul class="list-disc list-inside text-secondary space-y-1">
+                        <li>Generative AI</li>
+                        <li>Post-Quantum Cryptography</li>
+                        <li>Blockchain</li>
+                        <li>5G</li>
+                        <li>Private Wireless Networks</li>
+                        <li>Cloud Security</li>
+                        <li>Network Security</li>
+                        <li>Large Scale Identity and Authentication Systems</li>
+                        <li>SaaS Platforms</li>
+                        <li>Team Member Device Security</li>
+                        <li>Security Data Analytics</li>
+                        <li>Security Incident and Event Management (SIEM)</li>
+                        <li>Kubernetes</li>
+                    </ul>
+                </div>
+                <div class="card p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-xl font-semibold text-primary mb-3">Operations</h3>
+                    <ul class="list-disc list-inside text-secondary space-y-1">
+                        <li>Virtualization (VMWare, Hyper-V, KVM)</li>
+                        <li>Backup Recovery</li>
+                        <li>BCP</li>
+                        <li>Infosec Consulting</li>
+                        <li>DevOps</li>
+                        <li>ML Ops</li>
+                        <li>SQL Licensing</li>
+                        <li>Microsoft Licensing</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('theme-toggle');
+            const htmlElement = document.documentElement;
+
+            // Set initial theme based on localStorage or system preference
+            const currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            if (currentTheme === 'dark') {
+                htmlElement.classList.add('dark-theme');
+                htmlElement.classList.remove('light-theme');
+                themeToggle.innerHTML = '<span class="text-2xl">🌙</span>';
+            } else {
+                htmlElement.classList.add('light-theme');
+                htmlElement.classList.remove('dark-theme');
+                themeToggle.innerHTML = '<span class="text-2xl">☀️</span>';
+            }
+
+            themeToggle.addEventListener('click', () => {
+                if (htmlElement.classList.contains('light-theme')) {
+                    htmlElement.classList.remove('light-theme');
+                    htmlElement.classList.add('dark-theme');
+                    localStorage.setItem('theme', 'dark');
+                    themeToggle.innerHTML = '<span class="text-2xl">🌙</span>';
+                    updateChartColors('dark');
+                } else {
+                    htmlElement.classList.remove('dark-theme');
+                    htmlElement.classList.add('light-theme');
+                    localStorage.setItem('theme', 'light');
+                    themeToggle.innerHTML = '<span class="text-2xl">☀️</span>';
+                    updateChartColors('light');
+                }
+            });
+
+            // Chart Data and Configuration
+            const chartData = {
+                appModernization: {
+                    labels: ['TCO Reduction', 'Performance Improvement'],
+                    datasets: [{
+                        label: 'Percentage (%)',
+                        data: [30, 25],
+                        backgroundColor: ['#0f766e', '#14b8a6'], // Teal shades
+                        borderColor: ['#0f766e', '#14b8a6'],
+                        borderWidth: 1
+                    }]
+                },
+                finops: {
+                    labels: ['Migrated to Cloud', 'On-Premise'],
+                    datasets: [{
+                        data: [70, 30],
+                        backgroundColor: ['#0f766e', '#e2e8f0'], // Teal for migrated, light gray for on-prem
+                        hoverOffset: 4
+                    }]
+                },
+                kubernetes: {
+                    labels: ['Deployment Frequency', 'Provisioning Time Reduction'],
+                    datasets: [{
+                        label: 'Impact',
+                        data: [2, 15], // 2x and 15%
+                        backgroundColor: ['#0f766e', '#14b8a6'], // Teal shades
+                        borderColor: ['#0f766e', '#14b8a6'],
+                        borderWidth: 1
+                    }]
+                }
+            };
+
+            const getChartOptions = (theme) => {
+                const isDark = theme === 'dark';
+                return {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            font: { size: 16, weight: 'bold' },
+                            color: isDark ? '#e2e8f0' : '#1e293b'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.chart.canvas.id === 'kubernetesChart') {
+                                        if (context.dataIndex === 0) return '2x Improvement';
+                                        return `${context.raw}% Reduction`;
+                                    }
+                                    return `${context.raw}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: isDark ? '#a0aec0' : '#475569',
+                                callback: function(value) {
+                                    if (this.chart.canvas.id === 'kubernetesChart' && value === 2) return '2x';
+                                    return value + (this.chart.canvas.id === 'kubernetesChart' && value !== 2 ? '%' : '');
+                                }
+                            },
+                            grid: {
+                                color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: isDark ? '#a0aec0' : '#475569',
+                                callback: function(value, index, values) {
+                                    const label = this.getLabelForValue(value);
+                                    if (label.length > 16) {
+                                        return label.split(' ').map((word, i) => {
+                                            if (i === 0) return word;
+                                            return word.length > 0 ? word[0] : '';
+                                        }).join('');
+                                    }
+                                    return label;
+                                }
+                            },
+                            grid: {
+                                color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
+                            }
+                        }
+                    }
+                };
+            };
+
+            let appModernizationChart, finopsChart, kubernetesChart;
+
+            const initializeCharts = (theme) => {
+                const isDark = theme === 'dark';
+
+                // App Modernization Chart
+                const appModCtx = document.getElementById('appModernizationChart').getContext('2d');
+                if (appModernizationChart) appModernizationChart.destroy();
+                appModernizationChart = new Chart(appModCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: chartData.appModernization.labels,
+                        datasets: [{
+                            label: chartData.appModernization.datasets[0].label,
+                            data: chartData.appModernization.datasets[0].data,
+                            backgroundColor: isDark ? ['#2dd4bf', '#5eead4'] : ['#0f766e', '#14b8a6'],
+                            borderColor: isDark ? ['#2dd4bf', '#5eead4'] : ['#0f766e', '#14b8a6'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        ...getChartOptions(theme),
+                        plugins: {
+                            ...getChartOptions(theme).plugins,
+                            title: {
+                                ...getChartOptions(theme).plugins.title,
+                                text: 'Modernization Impact (%)'
+                            }
+                        },
+                        scales: {
+                            ...getChartOptions(theme).scales,
+                            y: {
+                                ...getChartOptions(theme).scales.y,
+                                max: 40
+                            }
+                        }
+                    }
+                });
+
+                // FinOps Chart
+                const finopsCtx = document.getElementById('finopsChart').getContext('2d');
+                if (finopsChart) finopsChart.destroy();
+                finopsChart = new Chart(finopsCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: chartData.finops.labels,
+                        datasets: [{
+                            data: chartData.finops.datasets[0].data,
+                            backgroundColor: isDark ? ['#2dd4bf', '#334155'] : ['#0f766e', '#e2e8f0'], /* Updated neutral color for dark theme */
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        ...getChartOptions(theme),
+                        plugins: {
+                            ...getChartOptions(theme).plugins,
+                            title: {
+                                ...getChartOptions(theme).plugins.title,
+                                text: 'Workload Migration (%)'
+                            }
+                        }
+                    }
+                });
+
+                // Kubernetes Chart
+                const kubernetesCtx = document.getElementById('kubernetesChart').getContext('2d');
+                if (kubernetesChart) kubernetesChart.destroy();
+                kubernetesChart = new Chart(kubernetesCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: chartData.kubernetes.labels,
+                        datasets: [{
+                            label: chartData.kubernetes.datasets[0].label,
+                            data: chartData.kubernetes.datasets[0].data,
+                            backgroundColor: isDark ? ['#2dd4bf', '#5eead4'] : ['#0f766e', '#14b8a6'],
+                            borderColor: isDark ? ['#2dd4bf', '#5eead4'] : ['#0f766e', '#14b8a6'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        ...getChartOptions(theme),
+                        plugins: {
+                            ...getChartOptions(theme).plugins,
+                            title: {
+                                ...getChartOptions(theme).plugins.title,
+                                text: 'Efficiency Gains'
+                            }
+                        },
+                        scales: {
+                            ...getChartOptions(theme).scales,
+                            y: {
+                                ...getChartOptions(theme).scales.y,
+                                max: 100 // For 2x and 15%
+                            }
+                        }
+                    }
+                });
+            };
+
+            const updateChartColors = (theme) => {
+                const isDark = theme === 'dark';
+                const newPrimaryColor = isDark ? '#2dd4bf' : '#0f766e'; // Teal shades
+                const newSecondaryColor = isDark ? '#5eead4' : '#14b8a6'; // Lighter teal shades
+                const newNeutralColor = isDark ? '#334155' : '#e2e8f0'; // Updated neutral gray for dark theme
+
+                if (appModernizationChart) {
+                    appModernizationChart.data.datasets[0].backgroundColor = [newPrimaryColor, newSecondaryColor];
+                    appModernizationChart.data.datasets[0].borderColor = [newPrimaryColor, newSecondaryColor];
+                    appModernizationChart.options.scales.y.ticks.color = isDark ? '#a0aec0' : '#475569';
+                    appModernizationChart.options.scales.x.ticks.color = isDark ? '#a0aec0' : '#475569';
+                    appModernizationChart.options.plugins.title.color = isDark ? '#e2e8f0' : '#1e293b';
+                    appModernizationChart.options.scales.y.grid.color = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+                    appModernizationChart.options.scales.x.grid.color = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+                    appModernizationChart.update();
+                }
+                if (finopsChart) {
+                    finopsChart.data.datasets[0].backgroundColor = [newPrimaryColor, newNeutralColor];
+                    finopsChart.options.scales.y.ticks.color = isDark ? '#a0aec0' : '#475569';
+                    finopsChart.options.scales.x.ticks.color = isDark ? '#a0aec0' : '#475569';
+                    finopsChart.options.plugins.title.color = isDark ? '#e2e8f0' : '#1e293b';
+                    finopsChart.options.scales.y.grid.color = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+                    finopsChart.options.scales.x.grid.color = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+                    finopsChart.update();
+                }
+                if (kubernetesChart) {
+                    kubernetesChart.data.datasets[0].backgroundColor = [newPrimaryColor, newSecondaryColor];
+                    kubernetesChart.data.datasets[0].borderColor = [newPrimaryColor, newSecondaryColor];
+                    kubernetesChart.options.scales.y.ticks.color = isDark ? '#a0aec0' : '#475569';
+                    kubernetesChart.options.scales.x.ticks.color = isDark ? '#a0aec0' : '#475569';
+                    kubernetesChart.options.plugins.title.color = isDark ? '#e2e8f0' : '#1e293b';
+                    kubernetesChart.options.scales.y.grid.color = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+                    kubernetesChart.options.scales.x.grid.color = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+                    kubernetesChart.update();
+                }
+            };
+
+            // Initialize charts with the current theme
+            initializeCharts(currentTheme);
+        });
+    </script>
+
+</body>
+</html>
